@@ -12,6 +12,27 @@
 :root{color-scheme:dark;--bg:#071923;--panel:#102a38;--panel2:#173746;--line:#294958;--text:#edf7fa;--muted:#a8bec8;--teal:#16a6a6;--teal2:#55d6c8;--red:#ff7777}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit}.wrap{max-width:900px;margin:auto;padding:16px 14px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 16px}.brand{display:flex;align-items:center;gap:11px}.logo{background:var(--teal);border-radius:13px;padding:11px 12px;font-weight:900}.muted{color:var(--muted)}.small{font-size:12px}.hero{padding:19px;border-radius:18px;background:linear-gradient(120deg,#07505b,#14364c);margin-bottom:12px}.hero h2{margin:6px 0;font-size:22px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}.metric,.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px}.metric b{display:block;font-size:24px;margin-top:4px}.bar{height:7px;background:#294451;border-radius:9px;overflow:hidden;margin-top:9px}.bar span{display:block;height:100%;background:var(--teal2)}.tabs{display:flex;gap:5px;background:#0d2531;padding:5px;border-radius:13px;margin:14px 0}.tabs button{flex:1;border:0;background:transparent;padding:10px 3px;border-radius:9px;font-size:12px;color:var(--muted)}.tabs button.active{background:var(--teal);color:white}.section{display:none}.section.active{display:block}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.btn{background:var(--panel2);border:1px solid var(--line);padding:9px 12px;border-radius:10px;font-size:13px}.primary{background:var(--teal);border-color:var(--teal);color:white}.danger{color:var(--red)}.task{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}.task:last-child{border:0}.task input[type=checkbox]{width:19px;height:19px;accent-color:var(--teal);flex-shrink:0}.taskmain{flex:1;min-width:0}.tasktitle{font-weight:650;overflow-wrap:anywhere}.done .tasktitle{text-decoration:line-through;color:var(--muted)}.taskmeta{font-size:11px;color:var(--muted);margin-top:3px}.actions{display:flex;gap:5px}.actions button{padding:6px 8px}.field{margin:11px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}input,select,textarea{width:100%;background:#091f2a;border:1px solid var(--line);color:var(--text);padding:10px;border-radius:9px}textarea{resize:vertical}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.subject{margin:9px 0}.subject h3{margin:0 0 5px}.empty{text-align:center;color:var(--muted);padding:22px 5px;font-size:13px}.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:14px;z-index:10}.modal.open{display:flex}.dialog{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;width:min(100%,520px);max-height:90vh;overflow:auto}.dialogfoot{display:flex;gap:8px;margin-top:14px}.dialogfoot button{flex:1}.hidden{display:none!important}.footer{text-align:center;color:var(--muted);font-size:11px;margin:20px 0}.installhint{font-size:12px;color:var(--muted);margin-top:7px}
 @media(max-width:520px){.wrap{padding:12px 10px 40px}.grid{gap:6px}.metric{padding:10px}.metric b{font-size:21px}.formgrid{grid-template-columns:1fr}.tabs button{font-size:11px}.task .actions .btn{font-size:11px;padding:6px}}
+
+.home-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.tool-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px;min-width:0}
+.tool-card h3{margin:0 0 10px;font-size:15px}
+.timer-display{font-size:38px;font-weight:800;letter-spacing:1px;text-align:center;padding:10px 0;font-variant-numeric:tabular-nums}
+.timer-controls{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.timer-controls button{min-width:66px}
+.mode-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.mode-row button{font-size:11px;padding:7px 9px}
+.topic-add{display:flex;gap:6px}
+.topic-add input{min-width:0}
+.topic-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.topic-item:last-child{border:0}
+.topic-item span{flex:1;overflow-wrap:anywhere}
+.topic-item.done span{text-decoration:line-through;color:var(--muted)}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.gallery-tile{position:relative;aspect-ratio:1;overflow:hidden;border-radius:10px;background:#091f2a}
+.gallery-tile img{width:100%;height:100%;object-fit:cover}
+.gallery-tile button{position:absolute;top:4px;right:4px;background:#071923dd;border:0;border-radius:7px;padding:4px 7px}
+.gallery-upload{display:inline-flex;align-items:center;gap:7px}
+@media(max-width:520px){.home-tools{grid-template-columns:1fr}.timer-display{font-size:36px}}
 </style>
 </head>
 <body>
@@ -25,6 +46,33 @@
   <div class="card"><div class="row"><b id="dateHeading">Daily mission</b><span class="muted small" id="dayCount">0/0 done</span></div><div class="bar"><span id="dayBar" style="width:0%"></span></div><div id="todayTasks"></div><div id="emptyTasks" class="empty">No tasks yet. Add your first task to begin.</div></div>
   <div class="card" style="margin-top:11px"><b>Study overview</b><div class="grid" style="margin-bottom:0"><div><div class="muted small">Daily target</div><b id="targetDisplay">6 hrs</b></div><div><div class="muted small">Completed task time</div><b id="hoursDisplay">0 hrs</b></div><div><div class="muted small">Plan duration</div><b id="durationDisplay">150 days</b></div></div></div>
   <div class="row" style="margin-top:11px"><button class="btn" id="homeSubject">＋ Add subject</button><button class="btn" id="homePlanner">＋ Plan a day</button></div>
+
+  <div class="home-tools">
+   <div class="tool-card">
+    <div class="row"><h3>🍅 Pomodoro focus</h3><span class="muted small" id="pomodoroCount">0 sessions</span></div>
+    <div class="mode-row"><button class="btn primary" data-pomo="focus">Focus 25</button><button class="btn" data-pomo="short">Short break 5</button><button class="btn" data-pomo="long">Long break 15</button></div>
+    <div class="timer-display" id="pomoDisplay">25:00</div>
+    <div class="muted small" id="pomoStatus" style="text-align:center;margin-bottom:10px">Ready to focus</div>
+    <div class="timer-controls"><button class="btn primary" id="pomoStart">Start</button><button class="btn" id="pomoPause">Pause</button><button class="btn" id="pomoReset">Reset</button></div>
+   </div>
+   <div class="tool-card">
+    <h3>⏱ Stopwatch</h3>
+    <div class="timer-display" id="stopwatchDisplay">00:00:00</div>
+    <div class="timer-controls"><button class="btn primary" id="swStart">Start</button><button class="btn" id="swPause">Pause</button><button class="btn" id="swReset">Reset</button></div>
+    <div class="muted small" style="text-align:center;margin-top:9px">Track your actual study time.</div>
+   </div>
+   <div class="tool-card">
+    <h3>📌 Topics to study</h3>
+    <div class="topic-add"><input id="topicInput" placeholder="Add a topic (e.g. Brachial plexus)"><button class="btn primary" id="topicAdd">Add</button></div>
+    <div id="topicList" class="muted small" style="margin-top:8px">Your topics will appear here.</div>
+   </div>
+   <div class="tool-card">
+    <div class="row"><h3>🖼️ My gallery</h3><label class="btn gallery-upload">＋ Add<input id="galleryInput" type="file" accept="image/*" multiple hidden></label></div>
+    <div class="muted small">Choose images from your phone gallery. Stored on this device.</div>
+    <div id="galleryGrid" class="gallery-grid"></div>
+    <div id="galleryEmpty" class="empty">No images added yet.</div>
+   </div>
+  </div>
  </section>
  <section class="section" id="planner">
   <div class="row" style="margin:15px 0 10px"><b>Daily planner</b><button class="btn primary" id="addTask">+ Add task</button></div>
@@ -97,6 +145,34 @@ $("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{ty
 $("importData").onchange=async e=>{try{let x=JSON.parse(await e.target.files[0].text());if(!Array.isArray(x.subjects)||!x.days)throw Error();if(confirm("Import and replace current app data?")){data={...defaults(),...x};save();alert("Backup imported.")}}catch(err){alert("Invalid backup file.")}e.target.value=""};
 $("resetProgress").onclick=()=>{if(confirm("Reset all completed task checkboxes?")){Object.values(data.days).flat().forEach(t=>t.done=false);save()}};
 $("resetAll").onclick=()=>{if(confirm("Permanently delete all app data? Export a backup first if needed.")){data=defaults();save();tab("home")}};
+
+const pomoModes={focus:25,short:5,long:15};
+let pomoMode="focus",pomoRemaining=25*60,pomoEnd=0,pomoInterval=null;
+let swElapsed=0,swStarted=0,swInterval=null;
+const fmt=(n)=>String(n).padStart(2,"0");
+function showPomo(){let m=Math.floor(pomoRemaining/60),s=pomoRemaining%60;$("pomoDisplay").textContent=fmt(m)+":"+fmt(s);$("pomodoroCount").textContent=(data.pomodoroSessions||0)+" sessions"}
+function stopPomo(){clearInterval(pomoInterval);pomoInterval=null}
+function tickPomo(){pomoRemaining=Math.max(0,Math.ceil((pomoEnd-Date.now())/1000));showPomo();if(pomoRemaining<=0){stopPomo();$("pomoStatus").textContent="Session complete! Take a mindful break.";if(pomoMode==="focus"){data.pomodoroSessions=(data.pomodoroSessions||0)+1;localStorage.setItem("mbcc_data_v1",JSON.stringify(data));showPomo()}if("vibrate"in navigator)navigator.vibrate([180,80,180]);}}
+function setPomo(mode){stopPomo();pomoMode=mode;pomoRemaining=pomoModes[mode]*60;pomoEnd=0;$("pomoStatus").textContent=mode==="focus"?"Ready to focus":mode==="short"?"Ready for a short break":"Ready for a long break";document.querySelectorAll("[data-pomo]").forEach(b=>b.classList.toggle("primary",b.dataset.pomo===mode));showPomo()}
+document.querySelectorAll("[data-pomo]").forEach(b=>b.onclick=()=>setPomo(b.dataset.pomo));
+$("pomoStart").onclick=()=>{if(pomoInterval||pomoRemaining<=0)return;pomoEnd=Date.now()+pomoRemaining*1000;$("pomoStatus").textContent="Session in progress";pomoInterval=setInterval(tickPomo,250)};
+$("pomoPause").onclick=()=>{if(!pomoInterval)return;tickPomo();stopPomo();$("pomoStatus").textContent="Paused"};
+$("pomoReset").onclick=()=>setPomo(pomoMode);
+function showStopwatch(){let total=swElapsed+(swStarted?Date.now()-swStarted:0),sec=Math.floor(total/1000),h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;$("stopwatchDisplay").textContent=fmt(h)+":"+fmt(m)+":"+fmt(s)}
+$("swStart").onclick=()=>{if(swStarted)return;swStarted=Date.now();swInterval=setInterval(showStopwatch,250)};
+$("swPause").onclick=()=>{if(!swStarted)return;swElapsed+=Date.now()-swStarted;swStarted=0;clearInterval(swInterval);showStopwatch()};
+$("swReset").onclick=()=>{swElapsed=0;swStarted=0;clearInterval(swInterval);showStopwatch()};
+function renderTopics(){let el=$("topicList");el.innerHTML="";let topics=data.homeTopics||[];if(!topics.length){el.textContent="Your topics will appear here.";return}topics.forEach(t=>{let row=document.createElement("div");row.className="topic-item"+(t.done?" done":"");row.innerHTML='<input type="checkbox" '+(t.done?"checked":"")+' aria-label="Mark topic complete"><span></span><button class="btn danger" aria-label="Delete topic">×</button>';row.querySelector("span").textContent=t.name;row.querySelector("input").onchange=e=>{t.done=e.target.checked;localStorage.setItem("mbcc_data_v1",JSON.stringify(data));renderTopics()};row.querySelector("button").onclick=()=>{data.homeTopics=topics.filter(x=>x.id!==t.id);localStorage.setItem("mbcc_data_v1",JSON.stringify(data));renderTopics()};el.append(row)})}
+$("topicAdd").onclick=()=>{let name=$("topicInput").value.trim();if(!name)return;data.homeTopics=data.homeTopics||[];data.homeTopics.push({id:uid(),name,done:false});$("topicInput").value="";localStorage.setItem("mbcc_data_v1",JSON.stringify(data));renderTopics()};
+$("topicInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("topicAdd").click()});
+const DB_NAME="mbcc_gallery_v1";
+function openGalleryDB(){return new Promise((resolve,reject)=>{let req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains("images"))req.result.createObjectStore("images",{keyPath:"id"})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function galleryRequest(mode,fn){let db=await openGalleryDB();return new Promise((resolve,reject)=>{let tx=db.transaction("images",mode),store=tx.objectStore("images"),req=fn(store);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);tx.oncomplete=()=>db.close();tx.onerror=()=>reject(tx.error)})}
+async function renderGallery(){let grid=$("galleryGrid");grid.innerHTML="";try{let images=await galleryRequest("readonly",s=>s.getAll());$("galleryEmpty").classList.toggle("hidden",images.length>0);images.forEach(item=>{let tile=document.createElement("div");tile.className="gallery-tile";let img=document.createElement("img");img.src=URL.createObjectURL(item.blob);img.alt=item.name||"Gallery image";let del=document.createElement("button");del.textContent="×";del.setAttribute("aria-label","Delete image");del.onclick=async()=>{await galleryRequest("readwrite",s=>s.delete(item.id));renderGallery()};tile.append(img,del);grid.append(tile)})}catch(e){$("galleryEmpty").textContent="Gallery storage is unavailable in this browser."}}
+async function compressImage(file){let bitmap=await createImageBitmap(file),scale=Math.min(1,1400/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement("canvas");canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();return new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",.82))}
+$("galleryInput").onchange=async e=>{let files=[...e.target.files].filter(f=>f.type.startsWith("image/"));try{for(let file of files){let blob=await compressImage(file);if(blob)await galleryRequest("readwrite",s=>s.put({id:uid(),name:file.name,blob,addedAt:Date.now()}))}await renderGallery()}catch(err){alert("Could not save these images. Check available device storage.")}e.target.value=""};
+renderTopics();renderGallery();showPomo();showStopwatch();
+
 function render(){renderHome();if($("planner").classList.contains("active"))renderPlanner();if($("subjects").classList.contains("active"))renderSubjects()}
 fillSettings();render();
 let deferredPrompt=null;
