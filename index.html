@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#092c3b">
+<meta name="description" content="A customizable MBBS study planner and command center.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>MBBS Command Center</title>
+<style>
+:root{color-scheme:dark;--bg:#071923;--panel:#102a38;--panel2:#173746;--line:#294958;--text:#edf7fa;--muted:#a8bec8;--teal:#16a6a6;--teal2:#55d6c8;--red:#ff7777}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit}.wrap{max-width:900px;margin:auto;padding:16px 14px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 16px}.brand{display:flex;align-items:center;gap:11px}.logo{background:var(--teal);border-radius:13px;padding:11px 12px;font-weight:900}.muted{color:var(--muted)}.small{font-size:12px}.hero{padding:19px;border-radius:18px;background:linear-gradient(120deg,#07505b,#14364c);margin-bottom:12px}.hero h2{margin:6px 0;font-size:22px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}.metric,.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px}.metric b{display:block;font-size:24px;margin-top:4px}.bar{height:7px;background:#294451;border-radius:9px;overflow:hidden;margin-top:9px}.bar span{display:block;height:100%;background:var(--teal2)}.tabs{display:flex;gap:5px;background:#0d2531;padding:5px;border-radius:13px;margin:14px 0}.tabs button{flex:1;border:0;background:transparent;padding:10px 3px;border-radius:9px;font-size:12px;color:var(--muted)}.tabs button.active{background:var(--teal);color:white}.section{display:none}.section.active{display:block}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.btn{background:var(--panel2);border:1px solid var(--line);padding:9px 12px;border-radius:10px;font-size:13px}.primary{background:var(--teal);border-color:var(--teal);color:white}.danger{color:var(--red)}.task{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}.task:last-child{border:0}.task input[type=checkbox]{width:19px;height:19px;accent-color:var(--teal);flex-shrink:0}.taskmain{flex:1;min-width:0}.tasktitle{font-weight:650;overflow-wrap:anywhere}.done .tasktitle{text-decoration:line-through;color:var(--muted)}.taskmeta{font-size:11px;color:var(--muted);margin-top:3px}.actions{display:flex;gap:5px}.actions button{padding:6px 8px}.field{margin:11px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}input,select,textarea{width:100%;background:#091f2a;border:1px solid var(--line);color:var(--text);padding:10px;border-radius:9px}textarea{resize:vertical}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.subject{margin:9px 0}.subject h3{margin:0 0 5px}.empty{text-align:center;color:var(--muted);padding:22px 5px;font-size:13px}.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:14px;z-index:10}.modal.open{display:flex}.dialog{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;width:min(100%,520px);max-height:90vh;overflow:auto}.dialogfoot{display:flex;gap:8px;margin-top:14px}.dialogfoot button{flex:1}.hidden{display:none!important}.footer{text-align:center;color:var(--muted);font-size:11px;margin:20px 0}.installhint{font-size:12px;color:var(--muted);margin-top:7px}
+@media(max-width:520px){.wrap{padding:12px 10px 40px}.grid{gap:6px}.metric{padding:10px}.metric b{font-size:21px}.formgrid{grid-template-columns:1fr}.tabs button{font-size:11px}.task .actions .btn{font-size:11px;padding:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top"><div class="brand"><div class="logo">M+</div><div><b>MBBS COMMAND</b><div class="muted small">Your study system · Your rules</div></div></div><button class="btn" id="installBtn" hidden>Install app</button></header>
+ <div class="hero"><div class="small" style="color:#b6e7e5">YOUR MEDICAL JOURNEY</div><h2 id="welcome">Build your future, one day at a time.</h2><div class="small" id="goalText">Your goals. Your schedule. Your progress.</div><div class="row small" style="margin-top:17px"><span>Overall task completion</span><b id="overallPct">0%</b></div><div class="bar"><span id="overallBar" style="width:0%"></span></div></div>
+ <div class="grid"><div class="metric"><span class="muted small">Subjects</span><b id="mSubjects">0</b></div><div class="metric"><span class="muted small">Today's tasks</span><b id="mTasks">0</b></div><div class="metric"><span class="muted small">Completed</span><b id="mDone">0</b></div></div>
+ <nav class="tabs"><button class="active" data-tab="home">⌂ Home</button><button data-tab="planner">▤ Planner</button><button data-tab="subjects">▣ Subjects</button><button data-tab="settings">⚙ Settings</button></nav>
+ <section class="section active" id="home">
+  <div class="row" style="margin:15px 0 10px"><b>Today's schedule</b><button class="btn primary" id="quickAdd">+ Add task</button></div>
+  <div class="card"><div class="row"><b id="dateHeading">Daily mission</b><span class="muted small" id="dayCount">0/0 done</span></div><div class="bar"><span id="dayBar" style="width:0%"></span></div><div id="todayTasks"></div><div id="emptyTasks" class="empty">No tasks yet. Add your first task to begin.</div></div>
+  <div class="card" style="margin-top:11px"><b>Study overview</b><div class="grid" style="margin-bottom:0"><div><div class="muted small">Daily target</div><b id="targetDisplay">6 hrs</b></div><div><div class="muted small">Completed task time</div><b id="hoursDisplay">0 hrs</b></div><div><div class="muted small">Plan duration</div><b id="durationDisplay">150 days</b></div></div></div>
+  <div class="row" style="margin-top:11px"><button class="btn" id="homeSubject">＋ Add subject</button><button class="btn" id="homePlanner">＋ Plan a day</button></div>
+ </section>
+ <section class="section" id="planner">
+  <div class="row" style="margin:15px 0 10px"><b>Daily planner</b><button class="btn primary" id="addTask">+ Add task</button></div>
+  <div class="card"><div class="field"><label>Select date</label><input id="planDate" type="date"></div><b id="plannerTitle">Schedule</b><div id="plannerTasks"></div><div class="installhint">Tasks are saved separately for each date.</div></div>
+  <div class="card" style="margin-top:11px"><b>Daily template</b><p class="muted small">Save a typical day and copy it to another date.</p><button class="btn" id="saveTemplate">Save this date as template</button> <button class="btn" id="copyTemplate">Apply template to this date</button></div>
+ </section>
+ <section class="section" id="subjects">
+  <div class="row" style="margin:15px 0 10px"><b>My subjects</b><button class="btn primary" id="addSubject">+ Add subject</button></div><div id="subjectList"></div>
+ </section>
+ <section class="section" id="settings">
+  <h3>Customize everything</h3>
+  <div class="card">
+   <b>Dashboard settings</b>
+   <div class="field"><label>Display name</label><input id="sName" placeholder="Your name"></div>
+   <div class="field"><label>Main goal</label><input id="sGoal" placeholder="Your study goal"></div>
+   <div class="formgrid"><div class="field"><label>Plan duration (days)</label><input id="sDuration" type="number" min="1"></div><div class="field"><label>Daily study target (hours)</label><input id="sHours" type="number" min="1" max="24" step=".5"></div></div>
+   <div class="field"><label>Plan start date</label><input id="sStart" type="date"></div><button class="btn primary" id="saveGeneral">Save dashboard settings</button>
+  </div>
+  <div class="card" style="margin-top:11px">
+   <b>Study preferences</b>
+   <div class="formgrid"><div class="field"><label>Default task duration (minutes)</label><input id="sTaskDuration" type="number" min="5" step="5"></div><div class="field"><label>Default start time</label><input id="sTime" type="time"></div></div>
+   <div class="field"><label>Daily revision target (minutes)</label><input id="sRevision" type="number" min="0"></div><button class="btn primary" id="savePrefs">Save preferences</button>
+  </div>
+  <div class="card" style="margin-top:11px">
+   <b>Backup and data</b><p class="muted small">Your study data stays in this browser on this device. Export a backup before clearing browser data or changing devices.</p>
+   <button class="btn" id="exportData">Export backup</button>
+   <label class="btn" style="display:inline-block">Import backup<input id="importData" type="file" accept=".json,application/json" hidden></label>
+   <div style="margin-top:12px"><button class="btn" id="resetProgress">Reset completed tasks</button> <button class="btn danger" id="resetAll">Delete all app data</button></div>
+  </div>
+ </section>
+ <div class="footer">MBBS Command Center · Customizable study dashboard · Data stored locally on this device</div>
+</div>
+<div class="modal" id="modal"><div class="dialog"><div class="row"><b id="modalTitle">Add task</b><button class="btn" id="closeModal">✕</button></div><div id="modalContent"></div><div class="dialogfoot"><button class="btn" id="cancelModal">Cancel</button><button class="btn primary" id="saveModal">Save</button></div></div></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),today=()=>{let d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
+const defaults=()=>({name:"Medical Student",goal:"Complete MBBS concepts + university exams + NEET PG foundation",duration:150,start:today(),hours:6,taskDuration:60,startTime:"07:00",revision:30,subjects:[],days:{},template:[]});
+let data;try{data={...defaults(),...JSON.parse(localStorage.getItem("mbcc_data_v1")||"{}")}}catch(e){data=defaults()}
+let selectedDate=today(),action=null;
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function save(){localStorage.setItem("mbcc_data_v1",JSON.stringify(data));render()}
+function tab(name){document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===name));document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x.dataset.tab===name));if(name==="planner")renderPlanner();if(name==="subjects")renderSubjects();if(name==="settings")fillSettings()}
+document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+function openModal(title,html,fn){$("modalTitle").textContent=title;$("modalContent").innerHTML=html;action=fn;$("modal").classList.add("open")}
+function closeModal(){$("modal").classList.remove("open");action=null}
+$("closeModal").onclick=$("cancelModal").onclick=closeModal;$("saveModal").onclick=()=>{if(action&&action()!==false)closeModal()};
+const subjectOptions=selected=>'<option value="">General study</option>'+data.subjects.map(s=>`<option value="${esc(s.id)}" ${s.id===selected?"selected":""}>${esc(s.name)}</option>`).join("");
+function taskForm(t={}){return `<div class="field"><label>Task name</label><input id="fTitle" placeholder="e.g. Cardiac cycle – concept study" value="${esc(t.title)}"></div><div class="field"><label>Subject</label><select id="fSubject">${subjectOptions(t.subject)}</select></div><div class="field"><label>Chapter / topic</label><input id="fChapter" placeholder="e.g. Cardiac cycle" value="${esc(t.chapter)}"></div><div class="formgrid"><div class="field"><label>Start time</label><input id="fTime" type="time" value="${esc(t.time||data.startTime)}"></div><div class="field"><label>Duration (minutes)</label><input id="fMinutes" type="number" min="5" value="${Number(t.minutes)||data.taskDuration}"></div></div><div class="field"><label>Task type</label><select id="fType">${["Concept learning","Revision","MCQs","Practical / Viva","University answer writing","Lecture","Test","Other"].map(x=>`<option ${t.type===x?"selected":""}>${x}</option>`).join("")}</select></div>`}
+function readTask(old={}){let title=$("fTitle").value.trim();if(!title){$("fTitle").focus();return false}return{id:old.id||uid(),title,subject:$("fSubject").value,chapter:$("fChapter").value.trim(),time:$("fTime").value,minutes:Math.max(5,Number($("fMinutes").value)||60),type:$("fType").value,done:!!old.done}}
+function addTask(date=selectedDate){openModal("Add study task",taskForm(),()=>{let t=readTask();if(!t)return false;(data.days[date]??=[]).push(t);save()})}
+function editTask(t,date){openModal("Edit study task",taskForm(t),()=>{let n=readTask(t);if(!n)return false;let a=data.days[date]||[],i=a.findIndex(x=>x.id===t.id);if(i>=0)a[i]=n;save()})}
+function subjName(id){return data.subjects.find(s=>s.id===id)?.name||"General study"}
+function listTasks(el,arr,date){el.innerHTML="";arr.forEach(t=>{let row=document.createElement("div");row.className="task"+(t.done?" done":"");row.innerHTML=`<input type="checkbox" ${t.done?"checked":""} aria-label="Mark complete"><div class="taskmain"><div class="tasktitle">${esc(t.title)}</div><div class="taskmeta">${esc(subjName(t.subject))} · ${esc(t.type)} · ${esc(t.time||"No time")} · ${t.minutes} min</div>${t.chapter?`<div class="taskmeta">${esc(t.chapter)}</div>`:""}</div><div class="actions"><button class="btn edit">Edit</button><button class="btn del">×</button></div>`;row.querySelector("input").onchange=e=>{t.done=e.target.checked;save()};row.querySelector(".edit").onclick=()=>editTask(t,date);row.querySelector(".del").onclick=()=>{if(confirm("Delete this task?")){data.days[date]=arr.filter(x=>x.id!==t.id);save()}};el.append(row)})}
+function renderHome(){let a=data.days[today()]||[],done=a.filter(t=>t.done).length,pct=a.length?Math.round(done/a.length*100):0;$("welcome").textContent="Welcome, "+(data.name||"Medical Student");$("goalText").textContent=data.goal;$("mSubjects").textContent=data.subjects.length;$("mTasks").textContent=a.length;$("mDone").textContent=done;$("dateHeading").textContent="Today · "+new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"short"});$("dayCount").textContent=`${done}/${a.length} done`;$("dayBar").style.width=pct+"%";listTasks($("todayTasks"),a,today());$("emptyTasks").classList.toggle("hidden",a.length>0);$("targetDisplay").textContent=data.hours+" hrs";$("hoursDisplay").textContent=(a.filter(t=>t.done).reduce((n,t)=>n+t.minutes,0)/60).toFixed(1)+" hrs";$("durationDisplay").textContent=data.duration+" days";let all=Object.values(data.days).flat(),p=all.length?Math.round(all.filter(t=>t.done).length/all.length*100):0;$("overallPct").textContent=p+"%";$("overallBar").style.width=p+"%"}
+function renderPlanner(){$("planDate").value=selectedDate;$("plannerTitle").textContent="Schedule · "+selectedDate;listTasks($("plannerTasks"),data.days[selectedDate]||[],selectedDate)}
+$("planDate").onchange=e=>{selectedDate=e.target.value||today();renderPlanner()};
+function subjectForm(s={}){return `<div class="field"><label>Subject name</label><input id="subName" value="${esc(s.name)}" placeholder="e.g. Anatomy"></div><div class="field"><label>Category</label><select id="subCategory">${["1st Year MBBS","2nd Year MBBS","Clinical subjects","NEET PG","INI-CET","Other"].map(x=>`<option ${s.category===x?"selected":""}>${x}</option>`).join("")}</select></div><div class="field"><label>Notes / target</label><textarea id="subNotes" rows="3" placeholder="Books, chapters, targets...">${esc(s.notes)}</textarea></div>`}
+function addSubject(){openModal("Add new subject",subjectForm(),()=>{let name=$("subName").value.trim();if(!name)return false;data.subjects.push({id:uid(),name,category:$("subCategory").value,notes:$("subNotes").value});save()})}
+function editSubject(s){openModal("Edit subject",subjectForm(s),()=>{let name=$("subName").value.trim();if(!name)return false;Object.assign(s,{name,category:$("subCategory").value,notes:$("subNotes").value});save()})}
+function renderSubjects(){let el=$("subjectList");el.innerHTML="";if(!data.subjects.length){el.innerHTML='<div class="card empty">No subjects added yet. Add Anatomy, Physiology, Biochemistry or any subject you want.</div>';return}data.subjects.forEach(s=>{let a=Object.values(data.days).flat().filter(t=>t.subject===s.id),d=a.filter(t=>t.done).length,box=document.createElement("div");box.className="card subject";box.innerHTML=`<div class="row"><div><h3>${esc(s.name)}</h3><div class="muted small">${esc(s.category)} · ${d}/${a.length} tasks completed</div></div><div class="actions"><button class="btn edit">Edit</button><button class="btn del">×</button></div></div><div class="bar"><span style="width:${a.length?d/a.length*100:0}%"></span></div><p class="muted small">${esc(s.notes||"No notes added")}</p>`;box.querySelector(".edit").onclick=()=>editSubject(s);box.querySelector(".del").onclick=()=>{if(confirm("Delete subject? Existing tasks will become General study.")){Object.values(data.days).flat().forEach(t=>{if(t.subject===s.id)t.subject=""});data.subjects=data.subjects.filter(x=>x.id!==s.id);save()}};el.append(box)})}
+$("addSubject").onclick=$("homeSubject").onclick=()=>{tab("subjects");addSubject()};
+$("quickAdd").onclick=$("addTask").onclick=()=>addTask(selectedDate=today());
+$("homePlanner").onclick=()=>{tab("planner");selectedDate=today();renderPlanner()};
+$("saveTemplate").onclick=()=>{data.template=(data.days[selectedDate]||[]).map(t=>({...t,id:uid(),done:false}));save();alert("Daily template saved.")};
+$("copyTemplate").onclick=()=>{if(!data.template.length){alert("Save a template first.");return}if(confirm("Replace tasks on "+selectedDate+" with your template?")){data.days[selectedDate]=data.template.map(t=>({...t,id:uid(),done:false}));save()}};
+function fillSettings(){[["sName","name"],["sGoal","goal"],["sDuration","duration"],["sStart","start"],["sHours","hours"],["sTaskDuration","taskDuration"],["sTime","startTime"],["sRevision","revision"]].forEach(([a,b])=>$(a).value=data[b]??"")}
+$("saveGeneral").onclick=()=>{data.name=$("sName").value.trim()||"Medical Student";data.goal=$("sGoal").value.trim();data.duration=Math.max(1,+$("sDuration").value||150);data.start=$("sStart").value||today();data.hours=Math.max(1,Math.min(24,+$("sHours").value||6));save();alert("Dashboard settings saved.")};
+$("savePrefs").onclick=()=>{data.taskDuration=Math.max(5,+$("sTaskDuration").value||60);data.startTime=$("sTime").value||"07:00";data.revision=Math.max(0,+$("sRevision").value||0);save();alert("Preferences saved.")};
+$("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="mbbs-command-center-backup.json";a.click();URL.revokeObjectURL(url)};
+$("importData").onchange=async e=>{try{let x=JSON.parse(await e.target.files[0].text());if(!Array.isArray(x.subjects)||!x.days)throw Error();if(confirm("Import and replace current app data?")){data={...defaults(),...x};save();alert("Backup imported.")}}catch(err){alert("Invalid backup file.")}e.target.value=""};
+$("resetProgress").onclick=()=>{if(confirm("Reset all completed task checkboxes?")){Object.values(data.days).flat().forEach(t=>t.done=false);save()}};
+$("resetAll").onclick=()=>{if(confirm("Permanently delete all app data? Export a backup first if needed.")){data=defaults();save();tab("home")}};
+function render(){renderHome();if($("planner").classList.contains("active"))renderPlanner();if($("subjects").classList.contains("active"))renderSubjects()}
+fillSettings();render();
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").hidden=false});
+$("installBtn").onclick=async()=>{if(!deferredPrompt){alert('On Android Chrome, open the browser menu and choose "Install app" or "Add to Home screen".');return}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$("installBtn").hidden=true};
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+})();
+</script>
+</body></html>
