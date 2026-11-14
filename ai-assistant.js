@@ -10,7 +10,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const addMessage=(text,who="assistant")=>{const el=document.createElement("div");el.className="ai-msg "+who;el.textContent=text;$("aiChat").append(el);$("aiChat").scrollTop=$("aiChat").scrollHeight};
 const speak=text=>{if(!state.speak||!("speechSynthesis"in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=window.speechSynthesis.getVoices().find(x=>x.name===state.voiceName);if(v)u.voice=v;u.rate=1;window.speechSynthesis.speak(u)};
 const answer=(t)=>{addMessage(t);speak(t)};
-function openTab(name){const b=document.querySelector('[data-tab="'+name+'"]');if(b)b.click();else answer("I couldn't find that section.") }
+function openTab(name){const b=document.querySelector('[data-tab="'+name+'"]');if(b){b.click();return}const more=document.querySelector('[data-tab="more"]');const tile=document.querySelector('[data-open-tab="'+name+'"]');if(more&&tile){more.click();tile.click();return}answer("I couldn't find that section.") }
 function setTheme(name){openTab("settings");setTimeout(()=>{const s=$("sTheme");if(!s)return;const opt=[...s.options].find(o=>o.value.toLowerCase()===name.toLowerCase()||o.text.toLowerCase().includes(name.toLowerCase()));if(opt){s.value=opt.value;s.dispatchEvent(new Event("change"));answer("Theme changed to "+opt.text+".")}else answer("I couldn't find that theme. Available themes are Ocean, Midnight, Forest, Rose and Light.")},80)}
 function command(raw){const q=raw.trim(),s=q.toLowerCase();if(!q)return;
 if(/^(hi|hello|hey|namaste)\b/.test(s)){answer("Hello! I'm your Command Center assistant. Tell me what you'd like to do.");return}
