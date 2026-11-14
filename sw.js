@@ -1,4 +1,4 @@
-const CACHE = "mbbs-command-center-v2";
+const CACHE = "mbbs-command-center-v3";
 const APP_CACHES = ["mbbs-command-center-"];
 
 const FILES = [
