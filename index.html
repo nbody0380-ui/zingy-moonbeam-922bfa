@@ -33,9 +33,51 @@
 .gallery-tile button{position:absolute;top:4px;right:4px;background:#071923dd;border:0;border-radius:7px;padding:4px 7px}
 .gallery-upload{display:inline-flex;align-items:center;gap:7px}
 @media(max-width:520px){.home-tools{grid-template-columns:1fr}.timer-display{font-size:36px}}
+
+#welcomeScreen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at 18% 12%,#176276 0,#0b3040 36%,#06151f 100%);opacity:1;visibility:visible;transition:opacity .75s ease,visibility .75s ease}
+#welcomeScreen.leaving{opacity:0;visibility:hidden;pointer-events:none}
+.welcome-panel{width:min(100%,470px);text-align:center}
+.welcome-mark{width:72px;height:72px;margin:0 auto 22px;border-radius:24px;background:linear-gradient(145deg,#55d6c8,#078b98);display:grid;place-items:center;font-size:29px;font-weight:900;color:#06232d;box-shadow:0 14px 45px #020b1680;animation:markFloat 2.8s ease-in-out infinite}
+.welcome-kicker{font-size:11px;letter-spacing:3px;color:#9edbd9;text-transform:uppercase}
+.welcome-title{font-size:clamp(27px,7vw,38px);line-height:1.12;margin:12px 0 8px;font-weight:800}
+#welcomeUser{color:#65e0d0}
+.welcome-sub{color:#b5cbd2;font-size:14px}
+.welcome-slides{position:relative;height:128px;margin:28px 0 22px}
+.welcome-slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}
+.welcome-slide.active{opacity:1;transform:translateY(0)}
+.welcome-emoji{font-size:37px;filter:drop-shadow(0 5px 14px #0006)}
+.welcome-slide strong{font-size:17px}
+.welcome-slide span{font-size:12px;color:#b6cbd2}
+.welcome-dots{display:flex;justify-content:center;gap:7px;margin:5px 0 23px}
+.welcome-dot{width:7px;height:7px;border-radius:50%;background:#64828d;transition:all .3s}
+.welcome-dot.active{width:23px;border-radius:9px;background:#55d6c8}
+.welcome-enter{width:100%;max-width:270px;border:0;border-radius:13px;padding:14px 20px;background:linear-gradient(90deg,#19aaa7,#55d6c8);color:#06252d;font-weight:800;font-size:14px;box-shadow:0 9px 28px #001a2580}
+.welcome-loading{font-size:11px;color:#8caeb8;margin-top:15px;letter-spacing:.5px}
+.welcome-pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:#55d6c8;margin-right:7px;animation:pulse 1s infinite}
+@keyframes markFloat{50%{transform:translateY(-6px)}}
+@keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
+@media(prefers-reduced-motion:reduce){#welcomeScreen,.welcome-slide,.welcome-mark{animation:none;transition:none}}
 </style>
 </head>
 <body>
+
+<div id="welcomeScreen" aria-label="Welcome screen">
+ <div class="welcome-panel">
+  <div class="welcome-mark">M+</div>
+  <div class="welcome-kicker">Your personal medical workspace</div>
+  <h1 class="welcome-title">Welcome back,<br><span id="welcomeUser">Medical Student</span></h1>
+  <div class="welcome-sub">Your goals are waiting. Let's make today count.</div>
+  <div class="welcome-slides" aria-live="polite">
+   <div class="welcome-slide active"><div class="welcome-emoji">🧠</div><strong>Learn with clarity</strong><span>Build concepts, one topic at a time.</span></div>
+   <div class="welcome-slide"><div class="welcome-emoji">🍅</div><strong>Focus without distractions</strong><span>Use focused sessions and meaningful breaks.</span></div>
+   <div class="welcome-slide"><div class="welcome-emoji">📈</div><strong>Make progress every day</strong><span>Your study journey, organized in one place.</span></div>
+  </div>
+  <div class="welcome-dots"><i class="welcome-dot active"></i><i class="welcome-dot"></i><i class="welcome-dot"></i></div>
+  <button class="welcome-enter" id="enterApp">Enter my Command Center</button>
+  <div class="welcome-loading"><i class="welcome-pulse"></i><span id="welcomeLoadingText">Preparing your workspace…</span></div>
+ </div>
+</div>
+
 <div class="wrap">
  <header class="top"><div class="brand"><div class="logo">M+</div><div><b>MBBS COMMAND</b><div class="muted small">Your study system · Your rules</div></div></div><button class="btn" id="installBtn" hidden>Install app</button></header>
  <div class="hero"><div class="small" style="color:#b6e7e5">YOUR MEDICAL JOURNEY</div><h2 id="welcome">Build your future, one day at a time.</h2><div class="small" id="goalText">Your goals. Your schedule. Your progress.</div><div class="row small" style="margin-top:17px"><span>Overall task completion</span><b id="overallPct">0%</b></div><div class="bar"><span id="overallBar" style="width:0%"></span></div></div>
@@ -44,11 +86,8 @@
  <section class="section active" id="home">
   <div class="row" style="margin:15px 0 10px"><b>Today's schedule</b><button class="btn primary" id="quickAdd">+ Add task</button></div>
   <div class="card"><div class="row"><b id="dateHeading">Daily mission</b><span class="muted small" id="dayCount">0/0 done</span></div><div class="bar"><span id="dayBar" style="width:0%"></span></div><div id="todayTasks"></div><div id="emptyTasks" class="empty">No tasks yet. Add your first task to begin.</div></div>
-  <div class="card" style="margin-top:11px"><b>Study overview</b><div class="grid" style="margin-bottom:0"><div><div class="muted small">Daily target</div><b id="targetDisplay">6 hrs</b></div><div><div class="muted small">Completed task time</div><b id="hoursDisplay">0 hrs</b></div><div><div class="muted small">Plan duration</div><b id="durationDisplay">150 days</b></ phone gallery. Stored on this device.</div>
-    <div id="galleryGrid" class="gallery-grid"></div>
-    <div id="galleryEmpty" class="empty">No images added yet.</div>
-   </div>
-  </div>
+  <div class="card" style="margin-top:11px"><b>Study overview</b><div class="grid" style="margin-bottom:0"><div><div class="muted small">Daily target</div><b id="targetDisplay">6 hrs</b></div><div><div class="muted small">Completed task time</div><b id="hoursDisplay">0 hrs</b></div><div><div class="muted small">Plan duration</div><b id="durationDisplay">150 days</b></div></div></div>
+  <div class="row" style="margin-top:11px"><button class="btn" id="homeSubject">＋ Add subject</button><button class="btn" id="homePlanner">＋ Plan a day</button></div>
  </section>
 
  <section class="section" id="pomodoro"><div class="tool-card" style="margin-top:15px">
@@ -175,6 +214,18 @@ $("galleryInput").onchange=async e=>{let files=[...e.target.files].filter(f=>f.t
 renderTopics();renderGallery();showPomo();showStopwatch();
 
 function render(){renderHome();if($("planner").classList.contains("active"))renderPlanner();if($("subjects").classList.contains("active"))renderSubjects()}
+
+const welcomeScreen=$("welcomeScreen");
+if(welcomeScreen){
+ $("welcomeUser").textContent=data.name||"Medical Student";
+ const slides=[...welcomeScreen.querySelectorAll(".welcome-slide")],dots=[...welcomeScreen.querySelectorAll(".welcome-dot")];
+ let currentSlide=0,slideTimer=null,exitTimer=null;
+ function showWelcomeSlide(i){currentSlide=i;slides.forEach((s,n)=>s.classList.toggle("active",n===i));dots.forEach((d,n)=>d.classList.toggle("active",n===i))}
+ slideTimer=setInterval(()=>showWelcomeSlide((currentSlide+1)%slides.length),1900);
+ $("enterApp").onclick=()=>{clearInterval(slideTimer);clearTimeout(exitTimer);welcomeScreen.classList.add("leaving");setTimeout(()=>welcomeScreen.remove(),800)};
+ exitTimer=setTimeout(()=>$("enterApp").click(),7200);
+}
+
 fillSettings();render();
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").hidden=false});
