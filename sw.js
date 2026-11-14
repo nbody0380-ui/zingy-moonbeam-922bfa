@@ -1,5 +1,67 @@
-const CACHE="mbbs-command-center-v1";
-const FILES=["./","./index.html","./manifest.webmanifest","./icon.svg"];
-self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES))));
-self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
-self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(res=>{let copy=res.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return res}).catch(()=>caches.match("./index.html"))))});
+const CACHE = "mbbs-command-center-v2";
+const APP_CACHES = ["mbbs-command-center-"];
+
+const FILES = [
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./icon.svg"
+];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(FILES))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        keys
+          .filter(key => APP_CACHES.some(prefix => key.startsWith(prefix)) && key !== CACHE)
+          .map(key => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", event => {
+  const request = event.request;
+
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+
+    try {
+      // Prefer the latest deployed file so installed PWAs receive updates.
+      const response = await fetch(request);
+
+      if (response && response.ok) {
+        await cache.put(request, response.clone());
+      }
+
+      return response;
+    } catch (error) {
+      const cached = await cache.match(request);
+      if (cached) return cached;
+
+      // Keep the app shell available when offline on a page navigation.
+      if (request.mode === "navigate") {
+        const appShell = await cache.match("./index.html");
+        if (appShell) return appShell;
+      }
+
+      return new Response("You are offline. Please reconnect and try again.", {
+        status: 503,
+        statusText: "Offline"
+      });
+    }
+  })());
+});
