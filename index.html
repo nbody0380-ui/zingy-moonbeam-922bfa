@@ -240,7 +240,7 @@ let data;try{data={...defaults(),...JSON.parse(localStorage.getItem("mbcc_data_v
 let selectedDate=today(),action=null;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function save(){localStorage.setItem("mbcc_data_v1",JSON.stringify(data));render()}
-function tab(name){document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===name));document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x.dataset.tab===name));if(name==="planner")renderPlanner();if(name==="subjects")renderSubjects();if(name==="topics")renderTopics();if(name==="gallery")renderGallery();if(name==="settings")fillSettings()}
+function tab(name){document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===name));const navName=["home","subjects","planner","pomodoro"].includes(name)?name:"more";document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x.dataset.tab===navName));if(name==="planner")renderPlanner();if(name==="subjects")renderSubjects();if(name==="topics")renderTopics();if(name==="gallery")renderGallery();if(name==="settings")fillSettings()}
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 document.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>tab(b.dataset.openTab));
 function openModal(title,html,fn){$("modalTitle").textContent=title;$("modalContent").innerHTML=html;action=fn;$("modal").classList.add("open")}
