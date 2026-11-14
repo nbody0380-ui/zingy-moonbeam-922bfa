@@ -100,7 +100,7 @@ body[data-theme="light"] .dialog{background:#fff;color:#152b36}
 </div>
 
 <div class="wrap">
- <header class="top"><div class="brand"><div class="logo">M+</div><div><b>MBBS COMMAND</b><div class="muted small">Your study system · Your rules</div></div></div><button class="btn" id="installBtn" hidden>Install app</button></header>
+ <header class="top"><div class="brand"><div class="logo">M+</div><div><b>MBBS COMMAND</b><div class="muted small">Your study system · Your rules</div></div></div><div style="display:flex;gap:6px;align-items:center"><button class="btn" id="shareAppBtn" type="button">↗ Share app</button><button class="btn" id="installBtn" hidden>Install app</button></div></header>
  <div class="hero"><div class="small" style="color:#b6e7e5">YOUR MEDICAL JOURNEY</div><h2 id="welcome">Build your future, one day at a time.</h2><div class="small" id="goalText">Your goals. Your schedule. Your progress.</div><div class="row small" style="margin-top:17px"><span>Overall task completion</span><b id="overallPct">0%</b></div><div class="bar"><span id="overallBar" style="width:0%"></span></div></div>
  <div class="grid"><div class="metric"><span class="muted small">Subjects</span><b id="mSubjects">0</b></div><div class="metric"><span class="muted small">Today's tasks</span><b id="mTasks">0</b></div><div class="metric"><span class="muted small">Completed</span><b id="mDone">0</b></div></div>
  <nav class="tabs"><button class="active" data-tab="home">⌂ Home</button><button data-tab="planner">▤ Planner</button><button data-tab="subjects">▣ Subjects</button><button data-tab="pomodoro">🍅 Focus</button><button data-tab="stopwatch">⏱ Stopwatch</button><button data-tab="topics">📌 Topics</button><button data-tab="gallery">🖼️ Gallery</button><button data-tab="settings">⚙ Settings</button></nav>
@@ -145,6 +145,12 @@ body[data-theme="light"] .dialog{background:#fff;color:#152b36}
  </section>
  <section class="section" id="settings">
   <h3>Customize everything</h3>
+  <div class="card" style="margin-bottom:11px">
+   <b>Share MBBS Command Center</b>
+   <p class="muted small">Share your app link using WhatsApp, Bluetooth / Nearby Share, AirDrop on iPhone, email or any app available on your device.</p>
+   <button class="btn primary" id="shareSettingsBtn" type="button">↗ Share app link</button>
+   <button class="btn" id="copyAppLinkBtn" type="button">Copy app link</button>
+  </div>
   <div class="card" style="margin-bottom:11px">
    <b>App appearance</b>
    <p class="muted small">Personalize the look of your Command Center. Changes apply immediately and are saved on this device.</p>
@@ -273,6 +279,14 @@ document.querySelectorAll("[data-accent]").forEach(b=>b.onclick=()=>{$("sAccent"
 
 applyAppearance();
 fillSettings();render();
+
+const appShareUrl="https://zingy-moonbeam-922bfa.netlify.app/";
+async function copyAppLink(){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(appShareUrl);alert("App link copied. You can paste it into WhatsApp or any message.");}else{window.prompt("Copy this app link:",appShareUrl)}}catch(e){window.prompt("Copy this app link:",appShareUrl)}}
+async function shareApp(){const shareData={title:"MBBS Command Center",text:"Try my MBBS Command Center — a study planner with subjects, timetable, Pomodoro timer, stopwatch, topics and a personal gallery.",url:appShareUrl};if(navigator.share){try{await navigator.share(shareData)}catch(e){if(e&&e.name!=="AbortError")copyAppLink()}}else{await copyAppLink()}}
+$("shareAppBtn").onclick=shareApp;
+$("shareSettingsBtn").onclick=shareApp;
+$("copyAppLinkBtn").onclick=copyAppLink;
+
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").hidden=false});
 $("installBtn").onclick=async()=>{if(!deferredPrompt){alert('On Android Chrome, open the browser menu and choose "Install app" or "Add to Home screen".');return}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$("installBtn").hidden=true};
