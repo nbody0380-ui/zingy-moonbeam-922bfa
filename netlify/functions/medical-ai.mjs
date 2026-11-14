@@ -80,6 +80,9 @@ export default async (request) => {
 
   const question = String(body.message || "").trim();
   if (!question || question.length > 6000) return json({ error: "Enter a question under 6,000 characters." }, 400);
+  const accessCode = process.env.APP_ACCESS_CODE;
+  if (!accessCode) return json({ error: "The app access code is not configured in Netlify yet." }, 503);
+  if (request.headers.get("x-app-access-code") !== accessCode) return json({ error: "Access code is incorrect. Check the code configured by the app owner." }, 401);
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return json({ error: "The secure AI service is not configured yet. Add OPENAI_API_KEY in Netlify environment variables." }, 503);
 
