@@ -57,6 +57,27 @@
 @keyframes markFloat{50%{transform:translateY(-6px)}}
 @keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
 @media(prefers-reduced-motion:reduce){#welcomeScreen,.welcome-slide,.welcome-mark{animation:none;transition:none}}
+
+/* Theme presets */
+body[data-theme="midnight"]{--bg:#100d20;--panel:#1b1730;--panel2:#292244;--line:#40365f;--text:#f4efff;--muted:#b9afd2}
+body[data-theme="forest"]{--bg:#071b17;--panel:#102c24;--panel2:#194234;--line:#2b5b48;--text:#effbf4;--muted:#a9c9b8}
+body[data-theme="rose"]{--bg:#211018;--panel:#351a29;--panel2:#4a2438;--line:#65344d;--text:#fff0f5;--muted:#d0aebd}
+body[data-theme="light"]{color-scheme:light;--bg:#eef4f7;--panel:#ffffff;--panel2:#e1edf2;--line:#c5d7df;--text:#152b36;--muted:#5d7480;--red:#c43d55}
+body[data-theme="light"] input,body[data-theme="light"] select,body[data-theme="light"] textarea{background:#f7fbfd;color:#152b36;border-color:#c5d7df}
+body[data-theme="light"] .tabs{background:#dce9ee}
+body[data-theme="light"] .tabs button{color:#526c78}
+body[data-theme="light"] .tabs button.active{color:#fff}
+body[data-theme="light"] .bar{background:#d5e2e8}
+body[data-theme="light"] .hero{background:linear-gradient(120deg,#d5f1f0,#dcecf8);color:#153441}
+body[data-theme="light"] .hero .small{color:#416a73!important}
+body[data-theme="light"] .welcome-screen{color:#fff}
+body[data-theme="light"] .modal{background:#132b3a99}
+body[data-theme="light"] .dialog{background:#fff;color:#152b36}
+:root[data-accent="blue"]{--teal:#2878e8;--teal2:#70b4ff}
+:root[data-accent="purple"]{--teal:#8856d9;--teal2:#bd9aff}
+:root[data-accent="pink"]{--teal:#d34d91;--teal2:#ff9bc9}
+:root[data-accent="green"]{--teal:#15966b;--teal2:#62d6a8}
+:root[data-accent="orange"]{--teal:#d98224;--teal2:#ffc16b}
 </style>
 </head>
 <body>
@@ -124,6 +145,22 @@
  </section>
  <section class="section" id="settings">
   <h3>Customize everything</h3>
+  <div class="card" style="margin-bottom:11px">
+   <b>App appearance</b>
+   <p class="muted small">Personalize the look of your Command Center. Changes apply immediately and are saved on this device.</p>
+   <div class="field"><label for="sTheme">App theme</label><select id="sTheme">
+    <option value="ocean">Ocean dark</option><option value="midnight">Midnight purple</option><option value="forest">Forest green</option><option value="rose">Rose dark</option><option value="light">Clean light</option>
+   </select></div>
+   <div class="field"><label for="sAccent">Accent colour</label><select id="sAccent">
+    <option value="teal">Teal</option><option value="blue">Electric blue</option><option value="purple">Violet</option><option value="pink">Pink</option><option value="green">Emerald</option><option value="orange">Amber</option>
+   </select></div>
+   <div class="row" style="flex-wrap:wrap;gap:7px"><span class="muted small">Quick colours</span>
+    <button class="btn" type="button" data-accent="teal" aria-label="Teal colour">🟢 Teal</button>
+    <button class="btn" type="button" data-accent="blue" aria-label="Blue colour">🔵 Blue</button>
+    <button class="btn" type="button" data-accent="purple" aria-label="Purple colour">🟣 Purple</button>
+    <button class="btn" type="button" data-accent="pink" aria-label="Pink colour">🌸 Pink</button>
+   </div>
+  </div>
   <div class="card">
    <b>Dashboard settings</b>
    <div class="field"><label>Display name</label><input id="sName" placeholder="Your name"></div>
@@ -178,7 +215,7 @@ $("quickAdd").onclick=$("addTask").onclick=()=>addTask(selectedDate=today());
 $("homePlanner").onclick=()=>{tab("planner");selectedDate=today();renderPlanner()};
 $("saveTemplate").onclick=()=>{data.template=(data.days[selectedDate]||[]).map(t=>({...t,id:uid(),done:false}));save();alert("Daily template saved.")};
 $("copyTemplate").onclick=()=>{if(!data.template.length){alert("Save a template first.");return}if(confirm("Replace tasks on "+selectedDate+" with your template?")){data.days[selectedDate]=data.template.map(t=>({...t,id:uid(),done:false}));save()}};
-function fillSettings(){[["sName","name"],["sGoal","goal"],["sDuration","duration"],["sStart","start"],["sHours","hours"],["sTaskDuration","taskDuration"],["sTime","startTime"],["sRevision","revision"]].forEach(([a,b])=>$(a).value=data[b]??"")}
+function fillSettings(){$("sTheme").value=data.theme||"ocean";$("sAccent").value=data.accent||"teal";[["sName","name"],["sGoal","goal"],["sDuration","duration"],["sStart","start"],["sHours","hours"],["sTaskDuration","taskDuration"],["sTime","startTime"],["sRevision","revision"]].forEach(([a,b])=>$(a).value=data[b]??"")}
 $("saveGeneral").onclick=()=>{data.name=$("sName").value.trim()||"Medical Student";data.goal=$("sGoal").value.trim();data.duration=Math.max(1,+$("sDuration").value||150);data.start=$("sStart").value||today();data.hours=Math.max(1,Math.min(24,+$("sHours").value||6));save();alert("Dashboard settings saved.")};
 $("savePrefs").onclick=()=>{data.taskDuration=Math.max(5,+$("sTaskDuration").value||60);data.startTime=$("sTime").value||"07:00";data.revision=Math.max(0,+$("sRevision").value||0);save();alert("Preferences saved.")};
 $("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="mbbs-command-center-backup.json";a.click();URL.revokeObjectURL(url)};
@@ -226,6 +263,15 @@ if(welcomeScreen){
  exitTimer=setTimeout(()=>$("enterApp").click(),7200);
 }
 
+
+const themePresets={ocean:{bg:"#071923",panel:"#102a38",panel2:"#173746",line:"#294958",text:"#edf7fa",muted:"#a8bec8"},midnight:{bg:"#100d20",panel:"#1b1730",panel2:"#292244",line:"#40365f",text:"#f4efff",muted:"#b9afd2"},forest:{bg:"#071b17",panel:"#102c24",panel2:"#194234",line:"#2b5b48",text:"#effbf4",muted:"#a9c9b8"},rose:{bg:"#211018",panel:"#351a29",panel2:"#4a2438",line:"#65344d",text:"#fff0f5",muted:"#d0aebd"},light:{bg:"#eef4f7",panel:"#ffffff",panel2:"#e1edf2",line:"#c5d7df",text:"#152b36",muted:"#5d7480"}};
+const accentPresets={teal:["#16a6a6","#55d6c8"],blue:["#2878e8","#70b4ff"],purple:["#8856d9","#bd9aff"],pink:["#d34d91","#ff9bc9"],green:["#15966b","#62d6a8"],orange:["#d98224","#ffc16b"]};
+function applyAppearance(){let theme=themePresets[data.theme]||themePresets.ocean,accent=accentPresets[data.accent]||accentPresets.teal;document.documentElement.dataset.accent=data.accent||"teal";document.body.dataset.theme=data.theme||"ocean";Object.entries(theme).forEach(([k,v])=>document.documentElement.style.setProperty("--"+k,v));document.documentElement.style.setProperty("--teal",accent[0]);document.documentElement.style.setProperty("--teal2",accent[1]);}
+function saveAppearance(){data.theme=$("sTheme").value;data.accent=$("sAccent").value;applyAppearance();localStorage.setItem("mbcc_data_v1",JSON.stringify(data))}
+$("sTheme").onchange=saveAppearance;$("sAccent").onchange=saveAppearance;
+document.querySelectorAll("[data-accent]").forEach(b=>b.onclick=()=>{$("sAccent").value=b.dataset.accent;saveAppearance()});
+
+applyAppearance();
 fillSettings();render();
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").hidden=false});
