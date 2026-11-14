@@ -103,11 +103,25 @@ body[data-theme="light"] .dialog{background:#fff;color:#152b36}
 
 <div class="wrap">
  <header class="top"><div class="brand"><div class="logo">M+</div><div><b>MBBS COMMAND</b><div class="muted small">Your study system · Your rules</div></div></div><div style="display:flex;gap:6px;align-items:center"><button class="btn" id="shareAppBtn" type="button">↗ Share app</button><button class="btn" id="installBtn" hidden>Install app</button></div></header>
- <div class="hero"><div class="small" style="color:#b6e7e5">YOUR MEDICAL JOURNEY</div><h2 id="welcome">Build your future, one day at a time.</h2><div class="small" id="goalText">Your goals. Your schedule. Your progress.</div><div class="row small" style="margin-top:17px"><span>Overall task completion</span><b id="overallPct">0%</b></div><div class="bar"><span id="overallBar" style="width:0%"></span></div></div>
- <div class="grid"><div class="metric"><span class="muted small">Subjects</span><b id="mSubjects">0</b></div><div class="metric"><span class="muted small">Today's tasks</span><b id="mTasks">0</b></div><div class="metric"><span class="muted small">Completed</span><b id="mDone">0</b></div></div>
- <nav class="tabs"><button class="active" data-tab="home">⌂ Home</button><button data-tab="aiAssistant">✦ AI Assistant</button><button data-tab="planner">▤ Planner</button><button data-tab="subjects">▣ Subjects</button><button data-tab="pomodoro">🍅 Focus</button><button data-tab="stopwatch">⏱ Stopwatch</button><button data-tab="topics">📌 Topics</button><button data-tab="gallery">🖼️ Gallery</button><button data-tab="settings">⚙ Settings</button></nav>
  <section class="section active" id="home">
-  <div class="row" style="margin:15px 0 10px"><b>Today's schedule</b><button class="btn primary" id="quickAdd">+ Add task</button></div>
+  <div class="dashboard-welcome">
+   <div class="dashboard-welcome-copy">
+    <div class="eyebrow">YOUR MEDICAL JOURNEY · TODAY</div>
+    <h1 id="welcome">Welcome back</h1>
+    <p id="goalText">Your goals. Your schedule. Your progress.</p>
+   </div>
+   <div class="dashboard-orbit" aria-hidden="true"><span>✚</span></div>
+   <div class="dashboard-progress">
+    <div class="dashboard-progress-label"><span>Overall task completion</span><strong id="overallPct">0%</strong></div>
+    <div class="bar"><span id="overallBar" style="width:0%"></span></div>
+   </div>
+  </div>
+  <div class="dashboard-metrics">
+   <div class="metric"><span class="muted small">Subjects</span><b id="mSubjects">0</b><span class="metric-foot">In your library</span></div>
+   <div class="metric"><span class="muted small">Today's tasks</span><b id="mTasks">0</b><span class="metric-foot">Planned for today</span></div>
+   <div class="metric"><span class="muted small">Completed</span><b id="mDone">0</b><span class="metric-foot">Tasks finished</span></div>
+  </div>
+  <div class="dashboard-section-heading"><div><div class="eyebrow">YOUR DAY</div><h2>Today's schedule</h2></div><button class="btn primary" id="quickAdd">＋ Add task</button></div>
   <div class="card"><div class="row"><b id="dateHeading">Daily mission</b><span class="muted small" id="dayCount">0/0 done</span></div><div class="bar"><span id="dayBar" style="width:0%"></span></div><div id="todayTasks"></div><div id="emptyTasks" class="empty">No tasks yet. Add your first task to begin.</div></div>
   <div class="card" style="margin-top:11px"><b>Study overview</b><div class="grid" style="margin-bottom:0"><div><div class="muted small">Daily target</div><b id="targetDisplay">6 hrs</b></div><div><div class="muted small">Completed task time</div><b id="hoursDisplay">0 hrs</b></div><div><div class="muted small">Plan duration</div><b id="durationDisplay">150 days</b></div></div></div>
   <div class="row" style="margin-top:11px"><button class="btn" id="homeSubject">＋ Add subject</button><button class="btn" id="homePlanner">＋ Plan a day</button></div>
@@ -198,8 +212,25 @@ body[data-theme="light"] .dialog{background:#fff;color:#152b36}
    <div style="margin-top:12px"><button class="btn" id="resetProgress">Reset completed tasks</button> <button class="btn danger" id="resetAll">Delete all app data</button></div>
   </div>
  </section>
- <div class="footer">MBBS Command Center · Customizable study dashboard · Data stored locally on this device</div>
+ <section class="section" id="more">
+  <div class="page-heading"><div class="eyebrow">YOUR WORKSPACE</div><h1>More tools</h1><p class="muted">Everything else in your Command Center, in one place.</p></div>
+  <div class="more-grid">
+   <button class="more-tile" data-open-tab="aiAssistant"><span class="more-icon">✦</span><span><strong>AI Assistant</strong><small>Medical questions and app commands</small></span><span class="more-arrow">›</span></button>
+   <button class="more-tile" data-open-tab="stopwatch"><span class="more-icon">◷</span><span><strong>Stopwatch</strong><small>Track your study time</small></span><span class="more-arrow">›</span></button>
+   <button class="more-tile" data-open-tab="topics"><span class="more-icon">☷</span><span><strong>Topics</strong><small>Your personal study checklist</small></span><span class="more-arrow">›</span></button>
+   <button class="more-tile" data-open-tab="gallery"><span class="more-icon">▧</span><span><strong>Gallery</strong><small>Saved study images</small></span><span class="more-arrow">›</span></button>
+   <button class="more-tile" data-open-tab="settings"><span class="more-icon">⚙</span><span><strong>Settings</strong><small>Appearance, preferences and backup</small></span><span class="more-arrow">›</span></button>
+  </div>
+ </section>
+ <div class="footer">MBBS Command Center · Your personal medical workspace</div>
 </div>
+<nav class="bottom-nav" aria-label="Main navigation">
+ <button class="bottom-nav-item active" data-tab="home"><span class="bottom-nav-icon">⌂</span><span>Home</span></button>
+ <button class="bottom-nav-item" data-tab="subjects"><span class="bottom-nav-icon">▤</span><span>Subjects</span></button>
+ <button class="bottom-nav-item" data-tab="planner"><span class="bottom-nav-icon">▦</span><span>Planner</span></button>
+ <button class="bottom-nav-item" data-tab="pomodoro"><span class="bottom-nav-icon">◷</span><span>Focus</span></button>
+ <button class="bottom-nav-item" data-tab="more"><span class="bottom-nav-icon">•••</span><span>More</span></button>
+</nav>
 <div class="modal" id="modal"><div class="dialog"><div class="row"><b id="modalTitle">Add task</b><button class="btn" id="closeModal">✕</button></div><div id="modalContent"></div><div class="dialogfoot"><button class="btn" id="cancelModal">Cancel</button><button class="btn primary" id="saveModal">Save</button></div></div></div>
 <script>
 (()=>{
@@ -211,6 +242,7 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),esc=
 function save(){localStorage.setItem("mbcc_data_v1",JSON.stringify(data));render()}
 function tab(name){document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===name));document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x.dataset.tab===name));if(name==="planner")renderPlanner();if(name==="subjects")renderSubjects();if(name==="topics")renderTopics();if(name==="gallery")renderGallery();if(name==="settings")fillSettings()}
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+document.querySelectorAll("[data-open-tab]").forEach(b=>b.onclick=()=>tab(b.dataset.openTab));
 function openModal(title,html,fn){$("modalTitle").textContent=title;$("modalContent").innerHTML=html;action=fn;$("modal").classList.add("open")}
 function closeModal(){$("modal").classList.remove("open");action=null}
 $("closeModal").onclick=$("cancelModal").onclick=closeModal;$("saveModal").onclick=()=>{if(action&&action()!==false)closeModal()};
