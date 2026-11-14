@@ -3,9 +3,9 @@
 "use strict";
 const $=id=>document.getElementById(id);
 const storeKey="mbcc_ai_v1";
-let state={mode:"offline",speak:true,voiceName:"",recognition:null,listening:false,library:[],voiceSample:null};
+let state={mode:"offline",speak:true,voiceName:"",accessCode:"",recognition:null,listening:false,library:[],voiceSample:null};
 try{state={...state,...JSON.parse(localStorage.getItem(storeKey)||"{}")}}catch(e){}
-const saveState=()=>{const safe={mode:state.mode,speak:state.speak,voiceName:state.voiceName};localStorage.setItem(storeKey,JSON.stringify(safe))};
+const saveState=()=>{const safe={mode:state.mode,speak:state.speak,voiceName:state.voiceName,accessCode:state.accessCode};localStorage.setItem(storeKey,JSON.stringify(safe))};
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const addMessage=(text,who="assistant")=>{const el=document.createElement("div");el.className="ai-msg "+who;el.textContent=text;$("aiChat").append(el);$("aiChat").scrollTop=$("aiChat").scrollHeight};
 const speak=text=>{if(!state.speak||!("speechSynthesis"in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=window.speechSynthesis.getVoices().find(x=>x.name===state.voiceName);if(v)u.voice=v;u.rate=1;window.speechSynthesis.speak(u)};
@@ -27,13 +27,35 @@ m=q.match(/^(?:add|create)\s+(?:a\s+)?subject\s+(.+)$/i);if(m){openTab("subjects
 m=q.match(/^(?:change|set)\s+(?:the\s+)?theme\s+(?:to\s+)?(.+)$/i);if(m){setTheme(m[1]);return}
 if(/\b(what|show|check).*(today.?s|today).*(task|schedule)|\btoday.?s tasks\b/.test(s)){openTab("home");const n=document.querySelectorAll("#todayTasks .task").length;answer("You have "+n+" task(s) scheduled for today. Your schedule is on the Home page.");return}
 if(/\b(help|what can you do)\b/.test(s)){answer("I can navigate every app section, start or pause Pomodoro, control the stopwatch, add topics and subjects, and change themes. Try: “Open planner”, “Start focus timer”, “Add topic renal physiology”, or “Change theme to forest”. Online textbook and research answers will be connected after a secure AI service is configured.");return}
-if(state.mode==="offline"){answer("I can do app-control commands offline, but I can't generate a new medical explanation without an online AI service. Try “help” to see available commands, or switch to Online mode once the secure AI connection is configured.");return}
-answer("Online AI is not connected yet. This interface is ready, but a secure backend/API must be configured before I can answer medical questions or search PubMed. Your message has not been sent anywhere.");
+if(state.mode==="offline"){answer("I can control the app offline. Switch to Online mode for medical AI and PubMed.");return}
+const requestMode=$("aiRequestMode")?.value||"chat";
+if(requestMode==="chat"&&!state.accessCode){answer("Enter the private app access code first. Never enter your OpenAI API key here.");return}
+addMessage("Connecting securely…");
+(async()=>{
+ try{
+  const headers={"content-type":"application/json"};
+  if(requestMode==="chat")headers["x-app-access-code"]=state.accessCode;
+  const response=await fetch("/api/medical-ai",{method:"POST",headers,body:JSON.stringify(requestMode==="pubmed"?{mode:"pubmed",query:q}:{mode:"chat",message:q})});
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"Request failed.");
+  if(requestMode==="pubmed"){
+   addMessage(result.answer||"PubMed results:");
+   (result.papers||[]).forEach(p=>{
+    const wrap=document.createElement("div");wrap.className="ai-msg assistant";
+    const title=document.createElement("div");title.textContent=p.title;
+    const meta=document.createElement("div");meta.className="ai-muted";meta.textContent=[p.authors,p.journal,p.year,"PMID: "+p.pmid].filter(Boolean).join(" · ");
+    const link=document.createElement("a");link.href=p.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open PubMed record";link.style.color="var(--teal2)";
+    wrap.append(title,meta,link);$("aiChat").append(wrap);
+   });$("aiChat").scrollTop=$("aiChat").scrollHeight;
+  }else answer(result.answer);
+ }catch(error){answer("Unable to complete request: "+error.message)}
+})();
 }
 $("aiSend").onclick=()=>{const v=$("aiInput").value.trim();if(!v)return;$("aiInput").value="";addMessage(v,"user");command(v)};
 $("aiInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("aiSend").click()}});
 document.querySelectorAll("[data-ai-mode]").forEach(b=>b.onclick=()=>{state.mode=b.dataset.aiMode;document.querySelectorAll("[data-ai-mode]").forEach(x=>x.classList.toggle("active",x===b));$("aiStatus").textContent=state.mode==="offline"?"Offline: app commands and local tools":"Online: ready for secure AI connection";saveState()});
 document.querySelector('[data-ai-mode="'+state.mode+'"]')?.classList.add("active");
+$("aiAccessCode").value=state.accessCode||""; $("aiAccessCode").onchange=e=>{state.accessCode=e.target.value.trim();saveState()};
 $("aiSpeakToggle").checked=state.speak;$("aiSpeakToggle").onchange=e=>{state.speak=e.target.checked;saveState()};
 function loadVoices(){const list=$("aiVoiceSelect");if(!list)return;const voices=window.speechSynthesis?.getVoices?.()||[];list.innerHTML='<option value="">System default voice</option>'+voices.map(v=>'<option value="'+esc(v.name)+'">'+esc(v.name)+' · '+esc(v.lang)+'</option>').join("");list.value=state.voiceName}
 if("speechSynthesis"in window){loadVoices();window.speechSynthesis.onvoiceschanged=loadVoices}
